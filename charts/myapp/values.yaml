@@ -1,0 +1,95 @@
+namespaceOverride: ""
+
+image:
+  repository: busybox
+  tag: "1.36"
+  pullPolicy: IfNotPresent
+
+config:
+  env:
+    APP_MODE: demo
+    LOG_LEVEL: info
+  mountPath: /config
+
+secret:
+  stringData:
+    username: demo
+    password: change-me
+  mountPath: /secret
+
+serviceAccount:
+  create: false
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 250m
+    memory: 128Mi
+
+deployment:
+  enabled: true
+  replicas: 2
+  containerPort: 8080
+  strategy:
+    type: RollingUpdate
+  command:
+    - sh
+    - -c
+    - "echo Hello from BusyBox && sleep 3600"
+  args: []
+
+daemonset:
+  enabled: true
+  image:
+    repository: busybox
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+  command:
+    - sh
+    - -c
+    - "while true; do echo 'daemonset heartbeat'; sleep 60; done"
+  extraVolumeMounts: []
+
+cronjob:
+  enabled: true
+  schedule: "*/5 * * * *"
+  image:
+    repository: busybox
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+  command:
+    - sh
+    - -c
+    - "date && echo 'CronJob task executed'"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+
+job:
+  enabled: true
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 300
+  image:
+    repository: busybox
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+  command:
+    - sh
+    - -c
+    - "echo 'Running one-off job' && sleep 5"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+  nodePort: 30080
+  annotations: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

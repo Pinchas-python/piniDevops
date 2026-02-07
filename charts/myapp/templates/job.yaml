@@ -1,0 +1,28 @@
+{{- if .Values.job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "myapp.fullname" . }}-job
+  namespace: {{ include "myapp.namespace" . }}
+  labels:
+    {{- include "myapp.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.job.backoffLimit }}
+  {{- if .Values.job.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.job.ttlSecondsAfterFinished }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: job
+        {{- include "myapp.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "myapp.serviceAccountName" . }}
+      restartPolicy: Never
+      containers:
+        - name: job-task
+          image: {{ printf "%s:%s" .Values.job.image.repository .Values.job.image.tag }}
+          imagePullPolicy: {{ .Values.job.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.job.command | nindent 12 }}
+{{- end }}

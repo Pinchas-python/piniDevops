@@ -1,0 +1,1 @@
+# Paste the output of `helm rollback myapp <revision> -n <namespace>` here.
