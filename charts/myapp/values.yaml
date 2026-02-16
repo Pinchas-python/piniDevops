@@ -1,9 +1,12 @@
 namespaceOverride: ""
 
 image:
-  repository: busybox
-  tag: "1.36"
+  repository: hashicorp/http-echo
+  tag: "0.3.1"
   pullPolicy: IfNotPresent
+  command:
+    - "-listen=:5678"
+    - "-text=Hello from Helm"
 
 config:
   env:
@@ -35,13 +38,13 @@ resources:
 deployment:
   enabled: true
   replicas: 2
-  containerPort: 8080
+  containerPort: 5678
   strategy:
     type: RollingUpdate
   command:
-    - sh
-    - -c
-    - "echo Hello from BusyBox && sleep 3600"
+    - /http-echo
+    - "-listen=:5678"
+    - "-text=Hello from Helm"
   args: []
 
 daemonset:
@@ -86,7 +89,7 @@ job:
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8080
+  targetPort: 5678
   nodePort: 30080
   annotations: {}
 

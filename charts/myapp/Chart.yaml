@@ -4,3 +4,15 @@ description: "Helm chart created from scratch for BusyBox and http-echo demos"
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
+home: https://minikube.sigs.k8s.io/
+sources:
+	- https://github.com/Pinchas-python/piniDevops
+	- https://hub.docker.com/r/hashicorp/http-echo
+keywords:
+	- kubernetes
+	- helm
+	- busybox
+	- http-echo
+maintainers:
+	- name: piniDevops Learner
+		email: dev@example.com
